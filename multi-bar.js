@@ -11,11 +11,11 @@
 
 		//Add toggle children menu button
 		this.addMenu({
-			name: "Show Only Direct Children",
-			id: "toggleChildren",
+			name: "Show Entire Workspace",
+			id: "toggleWorkspace",
 			icon: "fa fa-sitemap",
-			classname: "active",
-			containerClass: "active",
+			classname: "",
+			containerClass: "",
 			click: function() {
 				if ($(this).toggleClass('active').hasClass('active')) {
 					$(this).parent().addClass("active");
@@ -48,7 +48,7 @@
 		//Get display and other settings
 		var settings = {
 			groupByComp: $("#toggleAxis").attr("Class"),
-			onlyDirectChildren: $("#toggleChildren").attr("Class")
+			entireWorkspace: $("#toggleWorkspace").attr("Class")
 		};
 		return settings
 	},
@@ -65,7 +65,9 @@
 		var comps = this.getD3ComponentHierarchy(true);
 		console.log("COMPS IS:");
 		console.log(comps);
-		if (setting == "active") {
+		console.log("CONTEXT IS");
+		console.log(this.getContext());
+		if (setting == "") {
 			//var children = comps.selectedNode.children.length > 0 ? comps.selectedNode.children : (comps.selectedNode.parent) ? comps.selectedNode.parent.children : comps.selectedNode.children;
 			//If selected node has children, collect them. Otherwise just used the selected node
 			var children = comps.selectedNode.children.length > 0 ? comps.selectedNode.children : [comps.selectedNode];
@@ -74,9 +76,16 @@
 			return children;
 		} else {
 			var children = [];
-			//this.recursiveChildren(comps.selectedNode, children);
+			var parentID = comps.selectedNode.comp.attributes.rootWorkspace
+				//this.recursiveChildren(comps.selectedNode, children);
 			_.each(comps.nodeMap, function(comp) {
-				if (!comp.root) {children.push(comp);}
+				console.log("DECIDING ON");
+				console.log(comp);
+				if (comp.type != "workspace") {
+					if (comp.comp.attributes.rootWorkspace == parentID) {
+						children.push(comp);
+					}
+				}
 			});
 
 			console.log("FINAL CHILDREN IS:");
@@ -84,29 +93,6 @@
 			return children;
 		}
 	},
-
-	// recursiveChildren: function(node, children_array) {
-	// 	//console.log("IN RECURSIVE CHILDREN and this is:");
-	// 	//console.log(this);
-	//
-	// 	//children.push( node.children.length > 0 ? node.children : node );
-	// 	if (!node.root) {children_array.push(node);}
-	// 	if (node.children.length > 0) {
-	// 		// _.each(node.children, function(n) {
-	// 		// 	console.log("This in loop is");
-	// 		// 	console.log(this);
-	// 		// 	this.recursiveChildren(n, children_array);
-	// 		// });
-	// 		for (i = 0; i < node.children.length; i++) {
-	// 			console.log("CHILDREN ARRAY IS:");
-	// 			console.log(children_array);
-  //   		this.recursiveChildren(node.children[i], children_array);
-	// 		}
-	// 	}
-	// },
-
-
-
 
 	getData: function(settings) {
 		var customFields = ["Platform_cost", "Resource_Cost", "Technology_Cost"];
@@ -118,7 +104,7 @@
 
 		//Our chart data array
 		this.data = [];
-		var children = this.getComps(settings.onlyDirectChildren);
+		var children = this.getComps(settings.entireWorkspace);
 		//var children = comps.selectedNode.children.length > 0 ? comps.selectedNode.children : (comps.selectedNode.parent) ? comps.selectedNode.parent.children : comps.selectedNode.children;
 
 		_.each(customFields, function(field) {
