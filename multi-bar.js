@@ -1,20 +1,21 @@
 {
-
-
 	init: function() {
 		//add your initializing code here.
 		var that = this;
+		console.log(that);
+		console.log(that.addMenu);
 		height = (this.getHeight() - 150).toString() + "px";
 		width = (this.getWidth() - 120).toString() + "px";
 		this.addCSS("#customgraph", "height:" + height + " !important; width:" + width + " !important;");
 		LOG.log('init', this);
 
-		//Add toggle sticky labels menu button
+		//Add toggle children menu button
 		this.addMenu({
-			name: "Show only Direct Children",
+			name: "Show Only Direct Children",
 			id: "toggleChildren",
-			icon: "fa fa-cube",
-			class: "active",
+			icon: "fa fa-sitemap",
+			classname: "active",
+			containerClass: "active",
 			click: function() {
 				if ($(this).toggleClass('active').hasClass('active')) {
 					$(this).parent().addClass("active");
@@ -23,7 +24,23 @@
 				}
 				that.localRender();
 			}
+		});
 
+		//Add toggle x axis menu button
+		this.addMenu({
+			name: "Group Data By Components",
+			id: "toggleAxis",
+			icon: "fa fa-cube",
+			classname: "active",
+			containerClass: "active",
+			click: function() {
+				if ($(this).toggleClass('active').hasClass('active')) {
+					$(this).parent().addClass("active");
+				} else {
+					$(this).parent().removeClass("active");
+				}
+				that.localRender();
+			}
 		});
 	},
 
