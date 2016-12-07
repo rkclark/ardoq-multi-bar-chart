@@ -59,26 +59,67 @@
 
 	},
 
-	getComps: function() {
-		//Get all child comps including children of children
+	getComps: function(setting) {
+		//Get comps based on direct children only setting,
+		//then build chart data array
+		var comps = this.getD3ComponentHierarchy(true);
+		console.log("COMPS IS:");
+		console.log(comps);
+		if (setting == "active") {
+			//var children = comps.selectedNode.children.length > 0 ? comps.selectedNode.children : (comps.selectedNode.parent) ? comps.selectedNode.parent.children : comps.selectedNode.children;
+			//If selected node has children, collect them. Otherwise just used the selected node
+			var children = comps.selectedNode.children.length > 0 ? comps.selectedNode.children : [comps.selectedNode];
+			console.log("CHILDREN IS:");
+			console.log(children);
+			return children;
+		} else {
+			var children = [];
+			//this.recursiveChildren(comps.selectedNode, children);
+			_.each(comps.nodeMap, function(comp) {
+				if (!comp.root) {children.push(comp);}
+			});
 
+			console.log("FINAL CHILDREN IS:");
+			console.log(children);
+			return children;
+		}
 	},
 
+	// recursiveChildren: function(node, children_array) {
+	// 	//console.log("IN RECURSIVE CHILDREN and this is:");
+	// 	//console.log(this);
+	//
+	// 	//children.push( node.children.length > 0 ? node.children : node );
+	// 	if (!node.root) {children_array.push(node);}
+	// 	if (node.children.length > 0) {
+	// 		// _.each(node.children, function(n) {
+	// 		// 	console.log("This in loop is");
+	// 		// 	console.log(this);
+	// 		// 	this.recursiveChildren(n, children_array);
+	// 		// });
+	// 		for (i = 0; i < node.children.length; i++) {
+	// 			console.log("CHILDREN ARRAY IS:");
+	// 			console.log(children_array);
+  //   		this.recursiveChildren(node.children[i], children_array);
+	// 		}
+	// 	}
+	// },
 
 
 
-	getData: function() {
+
+	getData: function(settings) {
 		var customFields = ["Platform_cost", "Resource_Cost", "Technology_Cost"];
 		console.log("custom fields is");
 		console.log(customFields);
 
 		var that = this;
 		//Get component hierarchy for current context.
-		var comps = this.getD3ComponentHierarchy(true);
-		console.log(comps);
+
 		//Our chart data array
 		this.data = [];
-		var children = comps.selectedNode.children.length > 0 ? comps.selectedNode.children : (comps.selectedNode.parent) ? comps.selectedNode.parent.children : comps.selectedNode.children;
+		var children = this.getComps(settings.onlyDirectChildren);
+		//var children = comps.selectedNode.children.length > 0 ? comps.selectedNode.children : (comps.selectedNode.parent) ? comps.selectedNode.parent.children : comps.selectedNode.children;
 
 		_.each(customFields, function(field) {
 			//Get current context selected node and iterate thru children.
@@ -114,6 +155,8 @@
 	localRender: function() {
 		//add your rendering code here
 		var that = this;
+		console.log("THIS IS");
+		console.log(this);
 		//Add the base Ardoq SVG without legend.
 		this.svg = this.getD3SVG(null, null, true);
 		var chart = null;
@@ -123,7 +166,7 @@
 		console.log("SETTINGS ARE:");
 		console.log(settings);
 		var fields = this.getFields();
-		var data = this.getData();
+		var data = this.getData(settings);
 		//console.log(this.getModel());
 		var cv = nv.addGraph(function() {
 			chart = nv.models.multiBarChart()
@@ -133,7 +176,7 @@
 				.showLegend(true)
 				.color(['#0F5674', '#5FB2BF', '#A8E6B5', '#533654', '#9E9BBC', '#FA3B5A', '#CA7A8F', '#D45619', '#8A756F', '#FFE66D'])
 				.transitionDuration(350)
-				.reduceXTicks(true) //If 'false', every single x-axis tick label will be rendered.
+				.reduceXTicks(false) //If 'false', every single x-axis tick label will be rendered.
 				.rotateLabels(45) //Angle to rotate x-axis labels.
 				.showControls(true) //Allow user to switch between 'Grouped' and 'Stacked' mode.
 				.groupSpacing(0.03) //Distance between each group of bars.
