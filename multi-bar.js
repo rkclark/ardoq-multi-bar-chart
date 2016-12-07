@@ -3,13 +3,31 @@
 
 	init: function() {
 		//add your initializing code here.
-    height = (this.getHeight() - 150).toString() + "px";
-    width = (this.getWidth() - 120).toString() + "px";
-    this.addCSS("#customgraph", "height:"+height+" !important; width:"+width+" !important;");
+		var that = this;
+		height = (this.getHeight() - 150).toString() + "px";
+		width = (this.getWidth() - 120).toString() + "px";
+		this.addCSS("#customgraph", "height:" + height + " !important; width:" + width + " !important;");
 		LOG.log('init', this);
+
+		//Add toggle sticky labels menu button
+		this.addMenu({
+			name: "Show only Direct Children",
+			id: "toggleChildren",
+			icon: "fa fa-cube",
+			class: "active",
+			click: function() {
+				if ($(this).toggleClass('active').hasClass('active')) {
+					$(this).parent().addClass("active");
+				} else {
+					$(this).parent().removeClass("active");
+				}
+				that.localRender();
+			}
+
+		});
 	},
 
-	getSettings: function () {
+	getSettings: function() {
 		//Get display and other settings
 
 	},
@@ -29,9 +47,9 @@
 
 
 	getData: function() {
-    var customFields = ["Platform_cost", "Resource_Cost", "Technology_Cost"];
-    console.log("custom fields is");
-    console.log(customFields);
+		var customFields = ["Platform_cost", "Resource_Cost", "Technology_Cost"];
+		console.log("custom fields is");
+		console.log(customFields);
 		var that = this;
 		//Get component hierarchy for current context.
 		var comps = this.getD3ComponentHierarchy(true);
@@ -40,33 +58,33 @@
 		this.data = [];
 		var children = comps.selectedNode.children.length > 0 ? comps.selectedNode.children : (comps.selectedNode.parent) ? comps.selectedNode.parent.children : comps.selectedNode.children;
 
-    _.each(customFields, function(field) {
-      //Get current context selected node and iterate thru children.
-      var valItem = {
-        key: field,
-        values: [],
-        item: item
-      };
-      console.log("valItem is:");
-      console.log(valItem);
-      console.log(children);
-      _.each(children, function(comp) {
-        if (field in comp.numericFields) {
-          console.log("we have field "+field+" in "+comp.name);
-          valItem.values.push({
-            x: comp.name,
-            y: comp.numericFields[field].value,
-            item: comp
-          });
-        }
+		_.each(customFields, function(field) {
+			//Get current context selected node and iterate thru children.
+			var valItem = {
+				key: field,
+				values: [],
+				item: item
+			};
+			console.log("valItem is:");
+			console.log(valItem);
+			console.log(children);
+			_.each(children, function(comp) {
+				if (field in comp.numericFields) {
+					console.log("we have field " + field + " in " + comp.name);
+					valItem.values.push({
+						x: comp.name,
+						y: comp.numericFields[field].value,
+						item: comp
+					});
+				}
 
-      });
-      console.log("valItem is:");
-      console.log(valItem);
+			});
+			console.log("valItem is:");
+			console.log(valItem);
 
-        //Add value
-        that.data.push(valItem);
-      });
+			//Add value
+			that.data.push(valItem);
+		});
 
 
 		return this.data;
@@ -100,15 +118,15 @@
 
 			that.svg
 				.datum(data)
-        .attr("id", "customgraph")
+				.attr("id", "customgraph")
 				.call(chart);
-      console.log(that.svg);
+			console.log(that.svg);
 			that.svg.selectAll(".nv-bar").on("click", function(d) {
 				that.getContext().setComponent(d.item.comp);
 			});
 
 			return chart;
 		});
-    this.autoResizeSVG();
+		this.autoResizeSVG();
 	}
 }
