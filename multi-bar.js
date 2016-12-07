@@ -6,7 +6,7 @@
 		console.log(that.addMenu);
 		height = (this.getHeight() - 150).toString() + "px";
 		width = (this.getWidth() - 120).toString() + "px";
-		this.addCSS("#customgraph", "height:" + height + " !important; width:" + width + " !important;");
+		this.addCSS("#customgraph", "height:" + height + " !important; width:" + width + " !important; overflow: visible !important;");
 		LOG.log('init', this);
 
 		//Add toggle children menu button
@@ -46,7 +46,11 @@
 
 	getSettings: function() {
 		//Get display and other settings
-
+		var settings = {
+			groupByComp: $("#toggleAxis").attr("Class"),
+			onlyDirectChildren: $("#toggleChildren").attr("Class")
+		};
+		return settings
 	},
 
 	getFields: function() {
@@ -67,6 +71,7 @@
 		var customFields = ["Platform_cost", "Resource_Cost", "Technology_Cost"];
 		console.log("custom fields is");
 		console.log(customFields);
+
 		var that = this;
 		//Get component hierarchy for current context.
 		var comps = this.getD3ComponentHierarchy(true);
@@ -112,6 +117,11 @@
 		//Add the base Ardoq SVG without legend.
 		this.svg = this.getD3SVG(null, null, true);
 		var chart = null;
+
+		//Get settings from menu buttons
+		var settings = this.getSettings();
+		console.log("SETTINGS ARE:");
+		console.log(settings);
 		var fields = this.getFields();
 		var data = this.getData();
 		//console.log(this.getModel());
