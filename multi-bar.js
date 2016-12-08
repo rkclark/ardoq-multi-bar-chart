@@ -14,13 +14,29 @@
               title: (f.get('label') || f.get('name')),
               name: f.get('name'),
               icon: 'fa fa-fw' + iconShow,
-              setActive: true,
+              setActive: false,
               onClick: function () {
 								console.log($(this).siblings());
 								console.log("CLICKED:");
 								console.log(this);
-                var val = f.get('name');
 
+								_.each(that.fieldSelection, function(field) {
+									$(this).siblings(":contains("+field+")").addClass("active");
+									console.log($(this).siblings(":contains("+field+")"));
+									console.log("Added active class to "+field);
+								}, this);
+
+								if ($(this).hasClass("active")) {
+									$(this).removeClass("active");
+									var index = that.fieldSelection.indexOf(this.children[0].text.trim());
+									if (index != -1) { that.fieldSelection.splice( index, 1 ) };
+								} else {
+									$(this).addClass("active");
+									that.fieldSelection.push(this.children[0].text.trim())
+								}
+								console.log("UPDATED FIELD SELECTION TO:");
+								console.log(that.fieldSelection);
+                //var val = f.get('name');
                 //that.resetSelection();
                 //that.viewstate.sizeBasedOn = (val === 'value' || val === 'targetValue') ? 'reverse_' + val : val;
 
@@ -115,7 +131,7 @@
 
 	getFields: function() {
 		//Get fields selected by the user
-		console.log("IN GET FIELDS");
+		//console.log("IN GET FIELDS");
 
 	},
 
@@ -155,8 +171,8 @@
 
 	getData: function(settings) {
 		var customFields = ["Platform_cost", "Resource_Cost", "Technology_Cost"];
-		console.log("custom fields is");
-		console.log(customFields);
+		//console.log("custom fields is");
+		//console.log(customFields);
 
 		var that = this;
 		//Get component hierarchy for current context.
