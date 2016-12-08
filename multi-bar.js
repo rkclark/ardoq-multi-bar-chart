@@ -62,36 +62,36 @@
 	getComps: function(setting) {
 		//Get comps based on direct children only setting,
 		//then build chart data array
-		var comps = this.getD3ComponentHierarchy(true);
+		var comps = this.getD3ComponentHierarchy();
 		console.log("COMPS IS:");
 		console.log(comps);
-		console.log("CONTEXT IS");
-		console.log(this.getContext());
+		var components = [];
 		if (setting == "") {
-			//var children = comps.selectedNode.children.length > 0 ? comps.selectedNode.children : (comps.selectedNode.parent) ? comps.selectedNode.parent.children : comps.selectedNode.children;
 			//If selected node has children, collect them. Otherwise just used the selected node
-			var children = comps.selectedNode.children.length > 0 ? comps.selectedNode.children : [comps.selectedNode];
-			console.log("CHILDREN IS:");
-			console.log(children);
-			return children;
+				if (comps.selectedNode.children.length > 0) {
+				_.each(comps.selectedNode.children, function(child) {
+					//Check child is included in current filtering before adding to component array
+					if (child.included) { components.push(child); }
+				});
+			} else {
+				children = [comps.selectedNode];
+			}
 		} else {
-			var children = [];
-			var parentID = comps.selectedNode.comp.attributes.rootWorkspace
-				//this.recursiveChildren(comps.selectedNode, children);
 			_.each(comps.nodeMap, function(comp) {
 				console.log("DECIDING ON");
 				console.log(comp);
 				if (comp.type != "workspace") {
-					if (comp.comp.attributes.rootWorkspace == parentID) {
-						children.push(comp);
+					//Check comp is included in current workspace and also filtering before adding to component array
+					if (comp.comp.attributes.rootWorkspace == comps.selectedNode.comp.attributes.rootWorkspace && comp.included) {
+						components.push(comp);
 					}
 				}
 			});
 
-			console.log("FINAL CHILDREN IS:");
-			console.log(children);
-			return children;
 		}
+		console.log("FINAL COMPONENTS ARRAY IS:");
+		console.log(components);
+		return components;
 	},
 
 	getData: function(settings) {
