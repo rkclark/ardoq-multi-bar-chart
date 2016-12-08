@@ -1,4 +1,38 @@
 {
+	fieldOptions: function () {
+		var that = this;
+		console.log("IN FIELD OPTIONS");
+        return this.getCurrentFields()
+          .filter(function (f) {
+            //return f.get('type').indexOf('Number') > -1 || f.get('type').indexOf('SelectMultiple') > -1;
+						return f.get('type').indexOf('Number') > -1;
+          })
+          .map(function (f) {
+            var iconShow = 'fa-check';
+            return {
+              //classNames: 'showAll',
+              title: (f.get('label') || f.get('name')),
+              name: f.get('name'),
+              icon: 'fa fa-fw' + iconShow,
+              setActive: true,
+              onClick: function () {
+								console.log($(this).siblings());
+								console.log("CLICKED:");
+								console.log(this);
+                var val = f.get('name');
+
+                //that.resetSelection();
+                //that.viewstate.sizeBasedOn = (val === 'value' || val === 'targetValue') ? 'reverse_' + val : val;
+
+                //that.fieldMenu.parent().addClass('active');
+                $('.optMenu', that.fieldMenu).html('Selected fields ' + (f.get('label') || f.get('name')));
+
+                that.localRender();
+              }
+            };
+          });
+      },
+
 	init: function() {
 		//add your initializing code here.
 		var that = this;
@@ -42,7 +76,20 @@
 				that.localRender();
 			}
 		});
+
+		this.addMenu({
+        name: 'Select fields',
+        id: 'fieldDropdown',
+        icon: 'fa fa-list-alt',
+        containerClass: '',
+        dropdown: this.fieldOptions(),
+				click: function() {
+					console.log("CLCKED MENU");
+					console.log($(this).siblings("ul"));
+				}
+      });
 	},
+
 
 	getSettings: function() {
 		//Get display and other settings
@@ -60,12 +107,11 @@
 	},
 
 	getComps: function(setting) {
-		//Get comps based on direct children only setting,
-		//then build chart data array
 		var comps = this.getD3ComponentHierarchy();
 		console.log("COMPS IS:");
 		console.log(comps);
 		var components = [];
+		//If setting is blank, we only want direct children, else we are showing the entire workspace
 		if (setting == "") {
 			//If selected node has children, collect them. Otherwise just used the selected node
 				if (comps.selectedNode.children.length > 0) {
@@ -78,8 +124,8 @@
 			}
 		} else {
 			_.each(comps.nodeMap, function(comp) {
-				console.log("DECIDING ON");
-				console.log(comp);
+				//console.log("DECIDING ON");
+				//console.log(comp);
 				if (comp.type != "workspace") {
 					//Check comp is included in current workspace and also filtering before adding to component array
 					if (comp.comp.attributes.rootWorkspace == comps.selectedNode.comp.attributes.rootWorkspace && comp.included) {
@@ -114,12 +160,12 @@
 				values: [],
 				item: item
 			};
-			console.log("valItem is:");
-			console.log(valItem);
-			console.log(children);
+			//console.log("valItem is:");
+			//console.log(valItem);
+			//console.log(children);
 			_.each(children, function(comp) {
 				if (field in comp.numericFields) {
-					console.log("we have field " + field + " in " + comp.name);
+					///console.log("we have field " + field + " in " + comp.name);
 					valItem.values.push({
 						x: comp.name,
 						y: comp.numericFields[field].value,
@@ -128,8 +174,8 @@
 				}
 
 			});
-			console.log("valItem is:");
-			console.log(valItem);
+			//console.log("valItem is:");
+			//console.log(valItem);
 
 			//Add value
 			that.data.push(valItem);
