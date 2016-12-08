@@ -6,7 +6,7 @@
 		console.log(that.addMenu);
 		height = (this.getHeight() - 150).toString() + "px";
 		width = (this.getWidth() - 120).toString() + "px";
-		this.addCSS("#customgraph", "height:" + height + " !important; width:" + width + " !important; overflow: visible !important;");
+		this.addCSS("#customgraph", "height:" + height + " !important; width:" + width + " !important; overflow: visible !important; margin-bottom: 110px");
 		LOG.log('init', this);
 
 		//Add toggle children menu button
