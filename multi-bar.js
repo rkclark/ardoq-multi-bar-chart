@@ -35,6 +35,7 @@
 
 	init: function() {
 		//add your initializing code here.
+		this.fieldSelection = [];
 		var that = this;
 		console.log(that);
 		console.log(that.addMenu);
@@ -84,8 +85,20 @@
         containerClass: '',
         dropdown: this.fieldOptions(),
 				click: function() {
+					//Flush out any existing logged field selections
+					that.fieldSelection = [];
 					console.log("CLCKED MENU");
 					console.log($(this).siblings("ul"));
+					var listOptions = $(this).siblings("ul").children();
+					console.log("list options is:");
+					console.log(listOptions);
+					_.each(listOptions, function(li) {
+						if (li.className.includes("active")) {
+							that.fieldSelection.push(li.children[0].text.trim())
+						}
+					});
+					console.log("fieldSelection is nowL");
+					console.log(that.fieldSelection);
 				}
       });
 	},
