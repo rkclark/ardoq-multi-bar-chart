@@ -1,51 +1,52 @@
 {
-	fieldOptions: function () {
+	fieldOptions: function() {
 		var that = this;
 		console.log("IN FIELD OPTIONS");
-        return this.getCurrentFields()
-          .filter(function (f) {
-            //return f.get('type').indexOf('Number') > -1 || f.get('type').indexOf('SelectMultiple') > -1;
-						return f.get('type').indexOf('Number') > -1;
-          })
-          .map(function (f) {
-            var iconShow = 'fa-check';
-            return {
-              //classNames: 'showAll',
-              title: (f.get('label') || f.get('name')),
-              name: f.get('name'),
-              icon: 'fa fa-fw' + iconShow,
-              setActive: false,
-              onClick: function () {
-								console.log($(this).siblings());
-								console.log("CLICKED:");
-								console.log(this);
+		return this.getCurrentFields()
+			.filter(function(f) {
+				//return f.get('type').indexOf('Number') > -1 || f.get('type').indexOf('SelectMultiple') > -1;
+				return f.get('type').indexOf('Number') > -1;
+			})
+			.map(function(f) {
+				var iconShow = 'fa-check';
+				return {
+					title: (f.get('label') || f.get('name')),
+					name: f.get('name'),
+					icon: 'fa fa-fw' + iconShow,
+					setActive: false,
+					onClick: function() {
+						console.log($(this).siblings());
+						console.log("CLICKED:");
+						console.log(this);
 
-								_.each(that.fieldSelection, function(field) {
-									$(this).siblings(":contains("+field+")").addClass("active");
-									console.log($(this).siblings(":contains("+field+")"));
-									console.log("Added active class to "+field);
-								}, this);
+						_.each(that.fieldSelection, function(field) {
+							$(this).siblings(":contains(" + field + ")").addClass("active");
+							console.log($(this).siblings(":contains(" + field + ")"));
+							console.log("Added active class to " + field);
+						}, this);
 
-								if ($(this).hasClass("active")) {
-									$(this).removeClass("active");
-									var index = that.fieldSelection.indexOf(this.children[0].text.trim());
-									if (index != -1) { that.fieldSelection.splice( index, 1 ) };
-								} else {
-									$(this).addClass("active");
-									$('#fieldDropdown').parent().addClass("active");
-									that.fieldSelection.push(this.children[0].text.trim())
-								}
-								console.log("UPDATED FIELD SELECTION TO:");
-								console.log(that.fieldSelection);
+						if ($(this).hasClass("active")) {
+							$(this).removeClass("active");
+							var index = that.fieldSelection.indexOf(this.children[0].text.trim());
+							if (index != -1) {
+								that.fieldSelection.splice(index, 1)
+							};
+						} else {
+							$(this).addClass("active");
+							$('#fieldDropdown').parent().addClass("active");
+							that.fieldSelection.push(this.children[0].text.trim())
+						}
+						console.log("UPDATED FIELD SELECTION TO:");
+						console.log(that.fieldSelection);
 
-								var l = that.fieldSelection.length
-								$('#fieldDropdown').children("span:first").html(l+" Field"+(l == 1? "" : "s")+" Selected");
+						var l = that.fieldSelection.length
+						$('#fieldDropdown').children("span:first").html(l + " Field" + (l == 1 ? "" : "s") + " Selected");
 
-                that.localRender();
-              }
-            };
-          });
-      },
+						that.localRender();
+					}
+				};
+			});
+	},
 
 	init: function() {
 		//add your initializing code here.
@@ -80,8 +81,8 @@
 			name: "Group Data By Components",
 			id: "toggleAxis",
 			icon: "fa fa-cube",
-			classname: "active",
-			containerClass: "active",
+			classname: "",
+			containerClass: "",
 			click: function() {
 				if ($(this).toggleClass('active').hasClass('active')) {
 					$(this).parent().addClass("active");
@@ -93,28 +94,28 @@
 		});
 
 		this.addMenu({
-        name: 'Select fields',
-        id: 'fieldDropdown',
-        icon: 'fa fa-list-alt',
-        containerClass: '',
-        dropdown: this.fieldOptions(),
-				click: function() {
-					//Flush out any existing logged field selections
-					that.fieldSelection = [];
-					console.log("CLCKED MENU");
-					console.log($(this).siblings("ul"));
-					var listOptions = $(this).siblings("ul").children();
-					console.log("list options is:");
-					console.log(listOptions);
-					_.each(listOptions, function(li) {
-						if (li.className.includes("active")) {
-							that.fieldSelection.push(li.children[0].text.trim())
-						}
-					});
-					console.log("fieldSelection is nowL");
-					console.log(that.fieldSelection);
-				}
-      });
+			name: 'Select fields',
+			id: 'fieldDropdown',
+			icon: 'fa fa-list-alt',
+			containerClass: '',
+			dropdown: this.fieldOptions(),
+			click: function() {
+				//Flush out any existing logged field selections
+				that.fieldSelection = [];
+				console.log("CLCKED MENU");
+				console.log($(this).siblings("ul"));
+				var listOptions = $(this).siblings("ul").children();
+				console.log("list options is:");
+				console.log(listOptions);
+				_.each(listOptions, function(li) {
+					if (li.className.includes("active")) {
+						that.fieldSelection.push(li.children[0].text.trim())
+					}
+				});
+				console.log("fieldSelection is nowL");
+				console.log(that.fieldSelection);
+			}
+		});
 	},
 
 
@@ -127,12 +128,6 @@
 		return settings
 	},
 
-	getFields: function() {
-		//Get fields selected by the user
-		//console.log("IN GET FIELDS");
-
-	},
-
 	getComps: function(setting) {
 		var comps = this.getD3ComponentHierarchy();
 		console.log("COMPS IS:");
@@ -141,18 +136,18 @@
 		//If setting is blank, we only want direct children, else we are showing the entire workspace
 		if (setting == "") {
 			//If selected node has children, collect them. Otherwise just used the selected node
-				if (comps.selectedNode.children.length > 0) {
+			if (comps.selectedNode.children.length > 0) {
 				_.each(comps.selectedNode.children, function(child) {
 					//Check child is included in current filtering before adding to component array
-					if (child.included) { components.push(child); }
+					if (child.included) {
+						components.push(child);
+					}
 				});
 			} else {
 				children = [comps.selectedNode];
 			}
 		} else {
 			_.each(comps.nodeMap, function(comp) {
-				//console.log("DECIDING ON");
-				//console.log(comp);
 				if (comp.type != "workspace") {
 					//Check comp is included in current workspace and also filtering before adding to component array
 					if (comp.comp.attributes.rootWorkspace == comps.selectedNode.comp.attributes.rootWorkspace && comp.included) {
@@ -168,51 +163,56 @@
 	},
 
 	getData: function(settings) {
-		//var customFields = ["Platform_cost", "Resource_Cost", "Technology_Cost"];
-		//console.log("custom fields is");
-		//console.log(customFields);
 
 		var that = this;
 		//Get component hierarchy for current context.
 		var selectedFields = this.getCurrentFields()
-			.filter(function (f) {
-				//return f.get('type').indexOf('Number') > -1 || f.get('type').indexOf('SelectMultiple') > -1;
+			.filter(function(f) {
+				//return (f.get('type').indexOf('Number') > -1 || f.get('type').indexOf('SelectMultiple') > -1 ) && that.fieldSelection.includes(f.get('label'));
 				return f.get('type').indexOf('Number') > -1 && that.fieldSelection.includes(f.get('label'));
 			});
-			console.log("SELECT FIELDS IS");
-			console.log(selectedFields);
 		//Our chart data array
 		this.data = [];
-		var children = this.getComps(settings.entireWorkspace);
-		//var children = comps.selectedNode.children.length > 0 ? comps.selectedNode.children : (comps.selectedNode.parent) ? comps.selectedNode.parent.children : comps.selectedNode.children;
+		var components = this.getComps(settings.entireWorkspace);
 
-		_.each(selectedFields, function(field) {
-			//Get current context selected node and iterate thru children.
-			var valItem = {
-				key: field.attributes.label,
-				values: [],
-				item: field
-			};
-			//console.log("valItem is:");
-			//console.log(valItem);
-			//console.log(children);
-			_.each(children, function(comp) {
-				if (field.attributes.name in comp.numericFields) {
-					///console.log("we have field " + field + " in " + comp.name);
-					valItem.values.push({
-						x: comp.name,
-						y: comp.numericFields[field.attributes.name].value,
-						item: comp
-					});
-				}
+		if (settings.groupByComp == "") {
+			_.each(selectedFields, function(field) {
+				var valItem = {
+					key: field.attributes.label,
+					values: [],
+					item: field
+				};
+				_.each(components, function(comp) {
+					if (field.attributes.name in comp.numericFields) {
+						valItem.values.push({
+							x: comp.name,
+							y: comp.numericFields[field.attributes.name].value,
+							item: comp
+						});
+					}
 
+				});
+				that.data.push(valItem);
 			});
-			//console.log("valItem is:");
-			//console.log(valItem);
-
-			//Add value
-			that.data.push(valItem);
-		});
+		} else {
+			_.each(components, function(comp) {
+				var valItem = {
+					key: comp.name,
+					values: [],
+					item: comp
+				};
+				_.each(selectedFields, function(field) {
+					if (field.attributes.name in comp.numericFields) {
+						valItem.values.push({
+							x: field.attributes.label,
+							y: comp.numericFields[field.attributes.name].value,
+							item: comp
+						});
+					}
+				});
+				that.data.push(valItem);
+			});
+		}
 
 
 		return this.data;
@@ -230,7 +230,6 @@
 		var settings = this.getSettings();
 		console.log("SETTINGS ARE:");
 		console.log(settings);
-		var fields = this.getFields();
 		var data = this.getData(settings);
 		//console.log(this.getModel());
 		var cv = nv.addGraph(function() {
@@ -239,7 +238,7 @@
 					left: 75
 				})
 				.showLegend(true)
-				.color(['#0F5674', '#5FB2BF', '#A8E6B5', '#533654', '#9E9BBC', '#FA3B5A', '#CA7A8F', '#D45619', '#8A756F', '#FFE66D'])
+				.color(['#222222', '#F3C300', '#875692', '#F38400', '#A1CAF1', '#BE0032', '#C2B280', '#848482', '#008856', '#E68FAC', '#0067A5', '#F99379', '#604E97', '#F6A600', '#B3446C', '#DCD300', '#882D17', '#8DB600', '#654522', '#E25822', '#2B3D26'])
 				.transitionDuration(350)
 				.reduceXTicks(false) //If 'false', every single x-axis tick label will be rendered.
 				.rotateLabels(45) //Angle to rotate x-axis labels.
