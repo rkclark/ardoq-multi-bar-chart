@@ -1,10 +1,9 @@
 {
 	fieldOptions: function() {
 		var that = this;
-		console.log("IN FIELD OPTIONS");
+		//Get fields associated with current nodes and filter down to only numerics
 		return this.getCurrentFields()
 			.filter(function(f) {
-				//return f.get('type').indexOf('Number') > -1 || f.get('type').indexOf('SelectMultiple') > -1;
 				return f.get('type').indexOf('Number') > -1;
 			})
 			.map(function(f) {
@@ -15,18 +14,15 @@
 					icon: 'fa fa-fw' + iconShow,
 					setActive: false,
 					onClick: function() {
-						console.log($(this).siblings());
-						console.log("CLICKED:");
-						console.log(this);
-
+						//Iterate through sibling list items and add "active" class back onto those included in the selected fields array
+						//(The active flags will have been removed by default when the current list item is selected)
 						_.each(that.fieldSelection, function(field) {
 							$(this).siblings(":contains(" + field + ")").addClass("active");
-							console.log($(this).siblings(":contains(" + field + ")"));
-							console.log("Added active class to " + field);
 						}, this);
-
+						//Change active flag on current item and update fieldSelection array accordingly
 						if ($(this).hasClass("active")) {
 							$(this).removeClass("active");
+							//Remove current item from array
 							var index = that.fieldSelection.indexOf(this.children[0].text.trim());
 							if (index != -1) {
 								that.fieldSelection.splice(index, 1)
@@ -34,11 +30,10 @@
 						} else {
 							$(this).addClass("active");
 							$('#fieldDropdown').parent().addClass("active");
+							//Add current item to array
 							that.fieldSelection.push(this.children[0].text.trim())
 						}
-						console.log("UPDATED FIELD SELECTION TO:");
-						console.log(that.fieldSelection);
-
+						//Set text on the dropdown menu item
 						var l = that.fieldSelection.length
 						$('#fieldDropdown').children("span:first").html(l + " Field" + (l == 1 ? "" : "s") + " Selected");
 
@@ -49,14 +44,16 @@
 	},
 
 	init: function() {
-		//add your initializing code here.
+
 		this.fieldSelection = [];
 		var that = this;
-		console.log(that);
-		console.log(that.addMenu);
-		height = (this.getHeight() - 150).toString() + "px";
-		width = (this.getWidth() - 120).toString() + "px";
-		this.addCSS("#customgraph", "height:" + height + " !important; width:" + width + " !important; overflow: visible !important; margin-bottom: 110px");
+
+		//Set height of svg to be 85% of container, and width to be 95%
+		//Also make sure that overflow is visible to display long component names
+		height = (this.getHeight() * 0.85).toString() + "px";
+		width = (this.getWidth() * 0.95).toString() + "px";
+		this.addCSS("#customgraph", "height:" + height + " !important; width:" + width + " !important; overflow: visible !important;");
+
 		LOG.log('init', this);
 
 		//Add toggle children menu button
@@ -102,25 +99,19 @@
 			click: function() {
 				//Flush out any existing logged field selections
 				that.fieldSelection = [];
-				console.log("CLCKED MENU");
-				console.log($(this).siblings("ul"));
-				var listOptions = $(this).siblings("ul").children();
-				console.log("list options is:");
-				console.log(listOptions);
-				_.each(listOptions, function(li) {
+				//Select the ul associated with the dropdown menu and iterate through its child li elements
+				_.each($(this).siblings("ul").children(), function(li) {
 					if (li.className.includes("active")) {
+						//If we have an active li we add the field name to the fieldSelect array
 						that.fieldSelection.push(li.children[0].text.trim())
 					}
 				});
-				console.log("fieldSelection is nowL");
-				console.log(that.fieldSelection);
 			}
 		});
 	},
 
-
-	getSettings: function() {
-		//Get display and other settings
+	getDisplaySettings: function() {
+		//Get display settings
 		var settings = {
 			groupByComp: $("#toggleAxis").attr("Class"),
 			entireWorkspace: $("#toggleWorkspace").attr("Class")
@@ -130,8 +121,7 @@
 
 	getComps: function(setting) {
 		var comps = this.getD3ComponentHierarchy();
-		console.log("COMPS IS:");
-		console.log(comps);
+		//Initialize our custom components array
 		var components = [];
 		//If setting is blank, we only want direct children, else we are showing the entire workspace
 		if (setting == "") {
@@ -144,7 +134,7 @@
 					}
 				});
 			} else {
-				children = [comps.selectedNode];
+				components = [comps.selectedNode];
 			}
 		} else {
 			_.each(comps.nodeMap, function(comp) {
@@ -155,26 +145,22 @@
 					}
 				}
 			});
-
 		}
-		console.log("FINAL COMPONENTS ARRAY IS:");
-		console.log(components);
 		return components;
 	},
 
 	getData: function(settings) {
 
 		var that = this;
-		//Get component hierarchy for current context.
+		//Grab an array of the custom numerics fields associated with our current components
 		var selectedFields = this.getCurrentFields()
 			.filter(function(f) {
-				//return (f.get('type').indexOf('Number') > -1 || f.get('type').indexOf('SelectMultiple') > -1 ) && that.fieldSelection.includes(f.get('label'));
 				return f.get('type').indexOf('Number') > -1 && that.fieldSelection.includes(f.get('label'));
 			});
 		//Our chart data array
 		this.data = [];
 		var components = this.getComps(settings.entireWorkspace);
-
+		//Pass the data into the data array, the format depending on whether the user has selected to group data by components
 		if (settings.groupByComp == "") {
 			_.each(selectedFields, function(field) {
 				var valItem = {
@@ -190,7 +176,6 @@
 							item: comp
 						});
 					}
-
 				});
 				that.data.push(valItem);
 			});
@@ -213,25 +198,22 @@
 				that.data.push(valItem);
 			});
 		}
-
-
 		return this.data;
 	},
+
 	localRender: function() {
-		//add your rendering code here
+
 		var that = this;
-		console.log("THIS IS");
-		console.log(this);
-		//Add the base Ardoq SVG without legend.
+
+		//Add the base Ardoq SVG
 		this.svg = this.getD3SVG(null, null, true);
 		var chart = null;
 
 		//Get settings from menu buttons
-		var settings = this.getSettings();
-		console.log("SETTINGS ARE:");
-		console.log(settings);
+		var settings = this.getDisplaySettings();
+		//Build data array
 		var data = this.getData(settings);
-		//console.log(this.getModel());
+
 		var cv = nv.addGraph(function() {
 			chart = nv.models.multiBarChart()
 				.margin({
@@ -250,11 +232,11 @@
 
 			chart.yAxis.axisLabel("Value").axisLabelDistance(30);
 
+			//Pass data into SVG and call chart
 			that.svg
 				.datum(data)
 				.attr("id", "customgraph")
 				.call(chart);
-			console.log(that.svg);
 			that.svg.selectAll(".nv-bar").on("click", function(d) {
 				that.getContext().setComponent(d.item.comp);
 			});
