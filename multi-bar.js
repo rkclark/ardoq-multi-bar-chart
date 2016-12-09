@@ -170,34 +170,40 @@
 	},
 
 	getData: function(settings) {
-		var customFields = ["Platform_cost", "Resource_Cost", "Technology_Cost"];
+		//var customFields = ["Platform_cost", "Resource_Cost", "Technology_Cost"];
 		//console.log("custom fields is");
 		//console.log(customFields);
 
 		var that = this;
 		//Get component hierarchy for current context.
-
+		var selectedFields = this.getCurrentFields()
+			.filter(function (f) {
+				//return f.get('type').indexOf('Number') > -1 || f.get('type').indexOf('SelectMultiple') > -1;
+				return f.get('type').indexOf('Number') > -1 && that.fieldSelection.includes(f.get('label'));
+			});
+			console.log("SELECT FIELDS IS");
+			console.log(selectedFields);
 		//Our chart data array
 		this.data = [];
 		var children = this.getComps(settings.entireWorkspace);
 		//var children = comps.selectedNode.children.length > 0 ? comps.selectedNode.children : (comps.selectedNode.parent) ? comps.selectedNode.parent.children : comps.selectedNode.children;
 
-		_.each(customFields, function(field) {
+		_.each(selectedFields, function(field) {
 			//Get current context selected node and iterate thru children.
 			var valItem = {
-				key: field,
+				key: field.attributes.label,
 				values: [],
-				item: item
+				item: field
 			};
 			//console.log("valItem is:");
 			//console.log(valItem);
 			//console.log(children);
 			_.each(children, function(comp) {
-				if (field in comp.numericFields) {
+				if (field.attributes.name in comp.numericFields) {
 					///console.log("we have field " + field + " in " + comp.name);
 					valItem.values.push({
 						x: comp.name,
-						y: comp.numericFields[field].value,
+						y: comp.numericFields[field.attributes.name].value,
 						item: comp
 					});
 				}
