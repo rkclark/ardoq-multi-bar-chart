@@ -32,16 +32,14 @@
 									if (index != -1) { that.fieldSelection.splice( index, 1 ) };
 								} else {
 									$(this).addClass("active");
+									$('#fieldDropdown').parent().addClass("active");
 									that.fieldSelection.push(this.children[0].text.trim())
 								}
 								console.log("UPDATED FIELD SELECTION TO:");
 								console.log(that.fieldSelection);
-                //var val = f.get('name');
-                //that.resetSelection();
-                //that.viewstate.sizeBasedOn = (val === 'value' || val === 'targetValue') ? 'reverse_' + val : val;
 
-                //that.fieldMenu.parent().addClass('active');
-                $('.optMenu', that.fieldMenu).html('Selected fields ' + (f.get('label') || f.get('name')));
+								var l = that.fieldSelection.length
+								$('#fieldDropdown').children("span:first").html(l+" Field"+(l == 1? "" : "s")+" Selected");
 
                 that.localRender();
               }
