@@ -169,15 +169,7 @@
 					item: field
 				};
 				_.each(components, function(comp) {
-					// if (field.attributes.name in comp.numericFields) {
-					// 	valItem.values.push({
-					// 		x: comp.name,
-					// 		y: comp.numericFields[field.attributes.name].value,
-					// 		item: comp
-					// 	});
-					// }
-
-						valItem.values.push({
+							valItem.values.push({
 							x: comp.name,
 							y: (field.attributes.name in comp.numericFields) ? comp.numericFields[field.attributes.name].value : 0,
 							item: comp
