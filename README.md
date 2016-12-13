@@ -8,7 +8,7 @@ It takes inspiration from the out-of-the-box Statistics visualisation but offers
 - Switch the visual grouping of data between fields and components
 - Easily switch the scope of the data displayed between your current selection and the workspace as a whole
 
-The colors in the chart are based on Kelly's 22 Colors of Maximum Contrast, available [here](https://gist.github.com/ollieglass/f6ddd781eeae1d24e391265432297538).
+*Created using [NVD3's Stacked/Grouped Multi-Bar Chart components for d3](http://nvd3.org/examples/multiBar.html). The colors in the chart are based on Kelly's 22 Colors of Maximum Contrast, available [here](https://gist.github.com/ollieglass/f6ddd781eeae1d24e391265432297538).*
 
 ## Usage and Examples
 
@@ -53,7 +53,7 @@ This gives us a simple visual representation of how the values in each of our cu
 - Open the Ardoq plugin editor *(Refer to Ardoq help documentation for guidance if needed)*
 - Click to create a new Plugin
 - Give the plugin an ID and name. The name will be shown in the visualisation list.
-- Copy and paste the code from sunburst.js into the code editor window, over-writing any existing code that may be there.
+- Copy and paste the code from multi-bar.js into the code editor window, over-writing any existing code that may be there.
 - Click to Save and Run the plugin. It will now be a selectable visualisation in your model!
 
 ---
