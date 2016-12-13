@@ -48,7 +48,7 @@ Finally, let's look at the different display options we have available. First up
 
 
 
-We can also choose to change the way the data is grouped in the bars on the chart, either by the fields we have selected (the default), or the components in our view. Let's start with the default view, this time with all six of our custom fields selected:
+We can also choose to change the way the data is grouped in the chart, either by the fields we have selected (the default), or the components in our view. Let's start with an example of the default view, this time with all six of our custom fields selected:
 
 
 
@@ -64,7 +64,7 @@ By clicking "Group Data by Components" we now get:
 
 
 
-Notice how the fields are now listed on the x-axis and the components themselves are represented by the bars on the chart. Depending on the data in your model, this view might benefit from stacked mode, like this:
+Notice how the fields are now listed on the x-axis and the components themselves are represented by the bars on the chart. Depending on the data in your model, this type of view might benefit from stacked mode, like this:
 
 
 
@@ -72,7 +72,9 @@ Notice how the fields are now listed on the x-axis and the components themselves
 
 
 
-This gives us a simple visual representation of how the values in each of our custom fields are split between our components :)
+This gives us a simple visual representation of how the values in each of our custom fields are split between our components. Nice!
+
+You've probably had to use your imagination a bit to follow these examples which are all just based on dummy components and data. If you are using any numeric fields in your Ardoq model, I'd recommend installing the plugin and having a play to see what you can make it do :)
 
 ## Installation
 
