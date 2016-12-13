@@ -5,8 +5,10 @@ This plugin allows you generate multi-bar charts in [Ardoq](https://ardoq.com/) 
 
 It takes inspiration from the out-of-the-box Statistics visualisation but offers more customisation, including the ability to:
 - Select the fields that are displayed
-- Switch the visual grouping of data on the x-axis between fields and components
+- Switch the visual grouping of data between fields and components
 - Easily switch the scope of the data displayed between your current selection and the workspace as a whole
+
+The colors in the chart are based on Kelly's 22 Colors of Maximum Contrast, available [here](https://gist.github.com/ollieglass/f6ddd781eeae1d24e391265432297538).
 
 ## Usage and Examples
 
@@ -28,7 +30,23 @@ To easily expand the scope of the data that is shown, we can click the "Show Ent
 
 All of the components in the workspace are now shown. That's cool, but to fine-tune exactly which components are included in the chart you can use Ardoq's built in filtering functionality at any time. The plugin will respect the filters you've set. This is a powerful way to tailor the output of the visualisation to just what you need :)
 
+Finally, let's look at the different display options we have available. First up is to switch to "Stacked" rather than "Grouped" view. Here's the same chart as the one above but in Stacked mode:
 
+![Example of stacked mode](https://github.com/rkclark/multi-bar-chart/blob/master/img/ex_stacked.PNG)
+
+We can also choose to change the way the data is grouped in the bars on the chart, either by the fields we have selected (the default), or the components in our view. Let's start with the default view, this time with all six of our custom fields selected:
+
+![Example default view all data](https://github.com/rkclark/multi-bar-chart/blob/master/img/ex_alldatadefault.PNG)
+
+By clicking "Group Data by Components" we now get:
+
+![Example grouped by components](https://github.com/rkclark/multi-bar-chart/blob/master/img/ex_groupbycomps.PNG)
+
+Notice how the fields are now listed on the x-axis and the components themselves are represented by the bars on the chart. Depending on the data in your model, this view might benefit from stacked mode, like this:
+
+![Example of stacked mode with grouping by components](https://github.com/rkclark/multi-bar-chart/blob/master/img/ex_stackcomps.PNG)
+
+This gives us a simple visual representation of how the values in each of our custom fields are split between our components :)
 
 ## Installation
 
