@@ -12,7 +12,22 @@ It takes inspiration from the out-of-the-box Statistics visualisation but offers
 
 For this quick guide we will look at a basic workspace containing a set of parents (named "component") and their children (named "child"). It's a Flexible workspace and three component types are being used across a three-level hierarchy. There are six custom numeric fields in the workspace model, some are available to all component types and some are restricted. Here's a snapshot of the workspace:
 
-![Example workspace](https://github.com/rkclark/multi-bar-chart/blob/master/ex_workspace.PNG)
+![Example workspace](https://github.com/rkclark/multi-bar-chart/blob/master/img/ex_workspace.PNG)
+
+When the plugin is first loaded, you see a "No Data Available" message on the visualisation window. This is because no fields have yet been selected for display. Use the "Select Fields" menu button to select one or many of your custom numeric fields to display.
+
+![Select fields](https://github.com/rkclark/multi-bar-chart/blob/master/img/ex_select.PNG)
+
+Here's an example having selected three of our custom fields (My Field 1, 2 and 4) and "Component 1" in our hierarchy. Note that only the direct children of Component 1 are displayed by default:
+
+![Example with three fields](https://github.com/rkclark/multi-bar-chart/blob/master/img/ex_threefields.PNG)
+
+To easily expand the scope of the data that is shown, we can click the "Show Entire Workspace" button:
+
+![Example with entire workspace shown](https://github.com/rkclark/multi-bar-chart/blob/master/img/ex_entireworkspace.PNG)
+
+All of the components in the workspace are now shown. That's cool, but to fine-tune exactly which components are included in the chart you can use Ardoq's built in filtering functionality at any time. The plugin will respect the filters you've set. This is a powerful way to tailor the output of the visualisation to just what you need :)
+
 
 
 ## Installation
