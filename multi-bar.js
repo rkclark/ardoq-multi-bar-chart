@@ -1,5 +1,5 @@
 {
-	fieldOptions: function() {
+	getFieldOptions: function() {
 		var that = this;
 		//Get fields associated with current nodes and filter down to only numerics
 		return this.getCurrentFields()
@@ -7,34 +7,22 @@
 				return f.get('type').indexOf('Number') > -1;
 			})
 			.map(function(f) {
-				var iconShow = 'fa-check';
+				var isActive = !!that.fieldSelection[f.get('name')];
+				var iconShow = isActive ? 'fa-check' : '';
 				return {
 					title: (f.get('label') || f.get('name')),
 					name: f.get('name'),
-					icon: 'fa fa-fw' + iconShow,
-					setActive: false,
+					icon: 'fa fa-fw ' + iconShow,
 					onClick: function() {
-						//Iterate through sibling list items and add "active" class back onto those included in the selected fields array
-						//(The active flags will have been removed by default when the current list item is selected)
-						_.each(that.fieldSelection, function(field) {
-							$(this).siblings(":contains(" + field + ")").addClass("active");
-						}, this);
-						//Change active flag on current item and update fieldSelection array accordingly
-						if ($(this).hasClass("active")) {
-							$(this).removeClass("active");
+						// Update fieldSelection hash accordingly
+						if (that.fieldSelection[f.get('name')]) {
 							//Remove current item from array
-							var index = that.fieldSelection.indexOf(this.children[0].text.trim());
-							if (index != -1) {
-								that.fieldSelection.splice(index, 1)
-							};
+							delete that.fieldSelection[f.get('name')];
 						} else {
-							$(this).addClass("active");
-							$('#fieldDropdown').parent().addClass("active");
-							//Add current item to array
-							that.fieldSelection.push(this.children[0].text.trim())
+							that.fieldSelection[f.get('name')] = true;
 						}
 						//Set text on the dropdown menu item
-						var l = that.fieldSelection.length
+						var l = _.size(that.fieldSelection);
 						$('#fieldDropdown').children("span:first").html(l + " Field" + (l == 1 ? "" : "s") + " Selected");
 
 						that.localRender();
@@ -45,14 +33,12 @@
 
 	init: function() {
 
-		this.fieldSelection = [];
+		this.fieldSelection = {};
 		var that = this;
 
 		//Set height of svg to be 85% of container, and width to be 95%
 		//Also make sure that overflow is visible to display long component names
-		height = (this.getHeight() * 0.85).toString() + "px";
-		width = (this.getWidth() * 0.95).toString() + "px";
-		this.addCSS("#customgraph", "height:" + height + " !important; width:" + width + " !important; overflow: visible !important;");
+		this.addCSS("#customgraph", "height: 85% !important; width: 95% !important; overflow: visible !important;");
 
 		LOG.log('init', this);
 
@@ -95,19 +81,9 @@
 			id: 'fieldDropdown',
 			icon: 'fa fa-list-alt',
 			containerClass: '',
-			dropdown: this.fieldOptions(),
-			click: function() {
-				//Flush out any existing logged field selections
-				that.fieldSelection = [];
-				//Select the ul associated with the dropdown menu and iterate through its child li elements
-				_.each($(this).siblings("ul").children(), function(li) {
-					if (li.className.includes("active")) {
-						//If we have an active li we add the field name to the fieldSelect array
-						that.fieldSelection.push(li.children[0].text.trim())
-					}
-				});
-			}
+			dropdown: this.getFieldOptions()
 		});
+		
 	},
 
 	getDisplaySettings: function() {
@@ -155,7 +131,7 @@
 		//Grab an array of the custom numerics fields associated with our current components
 		var selectedFields = this.getCurrentFields()
 			.filter(function(f) {
-				return f.get('type').indexOf('Number') > -1 && that.fieldSelection.includes(f.get('label'));
+				return f.get('type').indexOf('Number') > -1 && that.fieldSelection[f.get('name')];
 			});
 		//Our chart data array
 		this.data = [];
@@ -201,6 +177,7 @@
 	localRender: function() {
 
 		var that = this;
+		this.reRenderDropdownMenu('fieldDropdown', _.bind(this.getFieldOptions, this));
 
 		//Add the base Ardoq SVG
 		this.svg = this.getD3SVG(null, null, true);
