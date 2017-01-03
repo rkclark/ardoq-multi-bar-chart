@@ -88,4 +88,4 @@ You've probably had to use your imagination a bit to follow these examples which
 
 *I hope you enjoy using the visualisation! Changes to the core Ardoq application may affect the plugin in the future, feel free to open an issue on this repo if you have any problems :)*
 
-*Plugin working correctly as at Ardoq version Version: 3.4.60 / 1.39.16.*
+*Plugin working correctly as at Ardoq version Version: 3.4.92 / 1.40.4.*
